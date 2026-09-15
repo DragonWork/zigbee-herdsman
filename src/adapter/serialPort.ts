@@ -1,32 +1,21 @@
 /* v8 ignore start */
 
 import {platform} from "node:os";
-import {type AutoDetectTypes, autoDetect, type OpenOptionsFromBinding, type SetOptions} from "@serialport/bindings-cpp";
-// This file was copied from https://github.com/serialport/node-serialport/blob/master/packages/serialport/lib/serialport.ts.
-import {type ErrorCallback, type OpenOptions, SerialPortStream, type StreamOptions} from "@serialport/stream";
+import {
+    type AutoDetectTypes,
+    type BindingInterface,
+    type ErrorCallback,
+    SerialPort as NativeSerialPort,
+    type SerialPortOpenOptions,
+    type SetOptions,
+} from "serialport-rs";
 
-const DetectedBinding = autoDetect();
+export type {SerialPortOpenOptions};
 
-export type SerialPortOpenOptions<T extends AutoDetectTypes> = Omit<StreamOptions<T>, "binding"> & OpenOptionsFromBinding<T>;
-
-export class SerialPort<T extends AutoDetectTypes = AutoDetectTypes> extends SerialPortStream<T> {
-    static list = DetectedBinding.list;
-    static readonly binding = DetectedBinding;
-
+export class SerialPort<T extends BindingInterface = AutoDetectTypes> extends NativeSerialPort<T> {
     constructor(options: SerialPortOpenOptions<T>, openCallback?: ErrorCallback) {
-        const opts: OpenOptions<T> = {
-            binding: DetectedBinding as T,
-            ...options,
-        };
-
-        if (platform() === "win32") {
-            // this controls `DTR` on "open", whereas on Unix, it's on "close"
-            // https://github.com/serialport/bindings-cpp/blob/19820c39fbbedc1b5f09d6508b5ef1268df3d455/src/serialport_win.cpp#L123-L127
-            // https://github.com/serialport/bindings-cpp/blob/19820c39fbbedc1b5f09d6508b5ef1268df3d455/src/serialport_unix.cpp#L254-L256
-            opts.hupcl = false;
-        }
-
-        super(opts, openCallback);
+        // Avoid resetting Windows coordinators through DTR during open.
+        super(platform() === "win32" ? {...options, hupcl: false} : options, openCallback);
     }
 
     public async asyncOpen(): Promise<void> {

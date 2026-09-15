@@ -1,5 +1,4 @@
-import {MockBinding, type MockPortBinding} from "@serialport/binding-mock";
-import type {OpenOptions} from "@serialport/stream";
+import {MockBinding, type OpenOptions} from "serialport-rs";
 import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi} from "vitest";
 import {EzspStatus} from "../../../src/adapter/ember/enums";
 import {EzspBuffalo} from "../../../src/adapter/ember/ezsp/buffalo";
@@ -36,7 +35,7 @@ const mockSerialPortErrorEvent = vi.fn();
 const mocks = [mockSerialPortCloseEvent, mockSerialPortErrorEvent];
 
 describe("Ember UART ASH Protocol", () => {
-    const openOpts: OpenOptions<MockPortBinding> = {path: "/dev/ttyACM0", baudRate: 115200, binding: MockBinding};
+    const openOpts: OpenOptions<typeof MockBinding> = {path: "/dev/ttyACM0", baudRate: 115200, binding: MockBinding};
     /**
      * Mock binding provides:
      *
