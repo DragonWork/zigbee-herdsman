@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import {platform} from "node:os";
-import type {PortInfo} from "@serialport/bindings-cpp";
 import {Bonjour} from "bonjour-service";
 import type {Service} from "bonjour-service/dist/lib/service";
+import type {PortInfo} from "serialport-rs";
 import {wait} from "../utils";
 import {logger} from "../utils/logger";
 import type {TsType} from ".";

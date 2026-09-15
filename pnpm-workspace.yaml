@@ -1,5 +1,7 @@
 verifyDepsBeforeRun: false
 
 allowBuilds:
-  "@serialport/bindings-cpp": true
   esbuild: true
+
+minimumReleaseAgeExclude:
+  - 'serialport-rs@0.3.2'
