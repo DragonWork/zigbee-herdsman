@@ -1,4 +1,4 @@
-import {MockBinding} from "@serialport/binding-mock";
+import {SerialPortMock} from "serialport-rs";
 import type {Mock, MockInstance} from "vitest";
 import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi} from "vitest";
 import {EzspStatus} from "../../../src/adapter/ember/enums";
@@ -21,6 +21,8 @@ import {
     SEND_UNICAST_REPLY_FN0_ASH_RAW,
     SET_POLICY_REPLY_FN1_ASH_RAW,
 } from "./consts";
+
+const MockBinding = SerialPortMock.binding;
 
 const emitFromSerial = async (ezsp: Ezsp, data: Buffer, skipAdvanceTimers = false): Promise<void> => {
     //@ts-expect-error private

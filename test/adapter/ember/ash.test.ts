@@ -1,5 +1,4 @@
-import {MockBinding, type MockPortBinding} from "@serialport/binding-mock";
-import type {OpenOptions} from "@serialport/stream";
+import {type OpenOptions, SerialPortMock} from "serialport-rs";
 import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi} from "vitest";
 import {EzspStatus} from "../../../src/adapter/ember/enums";
 import {EzspBuffalo} from "../../../src/adapter/ember/ezsp/buffalo";
@@ -24,6 +23,7 @@ import {ASH_ACK_FIRST_BYTES, adapterSONOFFDongleE, RECD_RSTACK_BYTES, SEND_ACK_F
 
 const mockSerialPortCloseEvent = vi.fn();
 const mockSerialPortErrorEvent = vi.fn();
+const MockBinding = SerialPortMock.binding;
 
 // todo doesnt reset if closing
 // todo doesnt start if closing or connected
@@ -36,7 +36,7 @@ const mockSerialPortErrorEvent = vi.fn();
 const mocks = [mockSerialPortCloseEvent, mockSerialPortErrorEvent];
 
 describe("Ember UART ASH Protocol", () => {
-    const openOpts: OpenOptions<MockPortBinding> = {path: "/dev/ttyACM0", baudRate: 115200, binding: MockBinding};
+    const openOpts: OpenOptions<typeof MockBinding> = {path: "/dev/ttyACM0", baudRate: 115200, binding: MockBinding};
     /**
      * Mock binding provides:
      *
